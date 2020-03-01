@@ -79,22 +79,31 @@ generateAdminDirectoryFunctions <- function(){
 
 getResourcesForObject <- function(objectList){
   
-  allObjects <- NULL
-  for(object in names(objectList$resources) %>% str_subset('[^resources]')){
+  allIds <- NULL
+  allPaths <- NULL
+  allHttpMethods <- NULL
+  allDescriptions <- NULL
+  allMethods <- NULL
+  if('resources' %in% names(objectList)){
+    for(object in names(objectList$resources) %>% str_subset('[^resources]')){
         
-    allObjects <- append(allObjects, object)
-    
-  #  allResources[[length(allResources) + 1]] <- resource
-    
+      methods <- objectList$resources[[object]]$methods %>% names()
+      
+      for(method in methods){
+        allIds <- append(allIds, objectList$resources[[object]]$methods[[method]]$id)
+        allPaths <- append(allPaths, objectList$resources[[object]]$methods[[method]]$path)
+        allHttpMethods <- append(allHttpMethods, objectList$resources[[object]]$methods[[method]]$httpmethod)
+        allDescriptions <- append(allDescriptions, objectList$resources[[object]]$methods[[method]]$description)
+        allMethods <- append(allMethods, method)
+      }
+    }
   }
   
   for(name in names(objectList)){
   
-    if('resources' %in% names(objectList[[name]])) allObjects <- append(allObjects, getResourcesForObject(objectList[[name]])) 
+    allMethods <- append(allMethods, getResourcesForObject(objectList[[name]])) 
     
-#    if('resources' %in% names(objectList[[name]])) allResources <- append(allResources, getResourcesForObject(objectList[[name]])) 
-      
   }
   
-  return(allObjects)
+  return(allMethods)
 }
