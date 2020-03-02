@@ -77,33 +77,26 @@ generateAdminDirectoryFunctions <- function(){
   
 }
 
-getResourcesForObject <- function(objectList){
+getNestedResourcesForObject <- function(objectList){
   
-  allIds <- NULL
-  allPaths <- NULL
-  allHttpMethods <- NULL
-  allDescriptions <- NULL
-  allMethods <- NULL
+  allResources <- NULL
   if('resources' %in% names(objectList)){
     for(object in names(objectList$resources) %>% str_subset('[^resources]')){
         
       methods <- objectList$resources[[object]]$methods %>% names()
-      
       for(method in methods){
-        allIds <- append(allIds, objectList$resources[[object]]$methods[[method]]$id)
-        allPaths <- append(allPaths, objectList$resources[[object]]$methods[[method]]$path)
-        allHttpMethods <- append(allHttpMethods, objectList$resources[[object]]$methods[[method]]$httpmethod)
-        allDescriptions <- append(allDescriptions, objectList$resources[[object]]$methods[[method]]$description)
-        allMethods <- append(allMethods, method)
+        
+        allResources[[length(allResources) + 1]] <- objectList$resources[[object]]$methods[[method]]
+        
       }
     }
   }
   
   for(name in names(objectList)){
   
-    allMethods <- append(allMethods, getResourcesForObject(objectList[[name]])) 
+    allResources <- append(allResources, getNestedResourcesForObject(objectList[[name]]))
     
   }
   
-  return(allMethods)
+  return(allResources)
 }
