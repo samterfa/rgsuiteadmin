@@ -59,13 +59,17 @@ getAPImethods <- function(discoveryRestUrl){
 
 generateAdminDirectoryFunctions <- function(){
   
+  if(!exists('googleAPI', inherits = T)) googleAPI <- listAPIs()
+  
   if(!exists('adminDirectoryAPI', inherits = T)) adminDirectoryAPI <- getAPIdetails(getAdminDirectoryDiscoveryRestURl(googleAPIs))
   
   object <- adminDirectoryAPI
   
-  resources <- getResourcesForObject(adminDirectoryAPI)
+  resources <- getNestedResourcesForObject(adminDirectoryAPI)
   
   for(resource in resources){
+    
+    return(resource)
     
     for(method in resource$methods){
       
@@ -79,6 +83,8 @@ generateAdminDirectoryFunctions <- function(){
 
 getNestedResourcesForObject <- function(objectList){
   
+  require(tidyverse)
+  
   allResources <- NULL
   if('resources' %in% names(objectList)){
     for(object in names(objectList$resources) %>% str_subset('[^resources]')){
@@ -87,7 +93,10 @@ getNestedResourcesForObject <- function(objectList){
       for(method in methods){
         
         allResources[[length(allResources) + 1]] <- objectList$resources[[object]]$methods[[method]]
+        allResources[[length(allResources)]]$method <- method
+        allResources[[length(allResources)]]$object <- object
         
+        allResources[[length(allResources)]] <- allResources[[length(allResources)]][append(c(which(names(allResources[[length(allResources)]]) == 'object'), which(names(allResources[[length(allResources)]]) == 'method')), (1:(length(names(allResources[[length(allResources)]])) - 2)))]
       }
     }
   }
