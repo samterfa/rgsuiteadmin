@@ -65,20 +65,21 @@ generateAdminDirectoryFunctions <- function(){
   
   object <- adminDirectoryAPI
   
+  # Flatten resources into list.
   resources <- getNestedResourcesForObject(adminDirectoryAPI)
   
   for(resource in resources){
     
-    return(resource)
+    object <- resource$object
+    method <- resource$method
+    id <- resource$object
+    path <- resource$path
+    httpMethod <- resource$httpMethod
+    description <- resource$description
     
-    for(method in resource$methods){
-      
-      print(method$description)
-      
-    }
+    print(description)
     
   }
-  
 }
 
 getNestedResourcesForObject <- function(objectList){
