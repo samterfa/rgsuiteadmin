@@ -20,7 +20,11 @@ my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL
   }
 }
 
+assignInNamespace('credentials_service_account', my_credentials_service_account, ns = 'gargle')
+
 checkGoogleAuthentication <- function(scopes, subject = 'adminscripts@minnehahaacademy.net', serviceJsonPath = '~/rCredentials/GoogleServiceCredentials.json'){
+  
+  require(tidyverse)
   
   if(exists('GoogleAuthToken', inherits = T)){
     
@@ -42,71 +46,7 @@ checkGoogleAuthentication <- function(scopes, subject = 'adminscripts@minnehahaa
     
       GoogleAuthToken <<- gargle::credentials_service_account(scopes = scopes, sub = subject, path = serviceJsonPath)
       
-      readr::write_rds('GoogleAuthToken', '~/rCredentials/GoogleAuthToken.rds')
+      readr::write_rds(GoogleAuthToken, '~/rCredentials/GoogleAuthToken.rds')
     }
   }
-}
-
-assignInNamespace('credentials_service_account', my_credentials_service_account, ns = 'gargle')
-
-getGoogleUser <- function(userEmail){
-  
-  endpoint <- paste0("/admin/directory/v1/users/", userEmail)
-  
-  scopes <- "https://www.googleapis.com/auth/admin.directory.user"
-  
-  checkGoogleAuthentication(scopes = scopes)
-  
-  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken)
-  
-  response <- gargle::request_make(request)
-  
-  responseContent <- gargle::response_process(response)
-  
-  return(responseContent)
-}
-
-getCustomerID <- function(customerKey){
-  
-  endpoint <- paste0("/admin/directory/v1/customers/", customerKey)
-  
-  scopes <- "https://www.googleapis.com/auth/admin.directory.customer"
-  
-  checkGoogleAuthentication(scopes = scopes)
-  
-  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken)
-  
-  response <- gargle::request_make(request)
-  
-  responseContent <- gargle::response_process(response)
-  
-  return(responseContent)
-  
-}
-
-
-listGoogleUsers <- function(domain){
-  
-  endpoint <- "/admin/directory/v1/users/" %>% glue::glue('?domain={domain}&maxResults=500')
- 
-  scopes <- "https://www.googleapis.com/auth/admin.directory.user"
-  
-  checkGoogleAuthentication(scopes = scopes)
-  
-  nextPageToken <- NULL
-  results <- NULL
-  while(is.null(results) | !is.null(nextPageToken)){
- 
-    request <- gargle::request_build(method = 'GET', path = ifelse(is.null(results), endpoint, endpoint %>% glue::glue('&pageToken={nextPageToken}')), token = GoogleAuthToken)
-    
-    response <- gargle::request_make(request)
-   
-    responseContent <- gargle::response_process(response)
-    
-    nextPageToken <- responseContent$nextPageToken
-  
-    results <- dplyr::bind_rows(results, responseContent$users %>% jsonlite::toJSON() %>% jsonlite::fromJSON(flatten = T))
-  }
-  
-  return(results)
 }

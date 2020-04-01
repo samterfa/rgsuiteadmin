@@ -30,6 +30,8 @@ getAdminDirectoryDiscoveryRestURl <- function(googleAPIs = listAPIs()){
 
 getAPIdetails <- function(discoveryRestUrl){
   
+  require(httr)
+  
   api <- content(GET(discoveryRestUrl))
   
   return(api)
