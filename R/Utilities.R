@@ -28,11 +28,20 @@ checkGoogleAuthentication <- function(scopes, subject = 'adminscripts@minnehahaa
   
   if(exists('GoogleAuthToken', inherits = T)){
     
+    suppressWarnings(
+      if(class(GoogleAuthToken) == 'character'){
+        
+        file.remove('~/rCredentials/GoogleAuthToken.rds')
+        rm(GoogleAuthToken, inherits = T)
+        checkGoogleAuthentication(scopes = scopes) 
+      }
+    )
+    
     if(!all(scopes %in% (GoogleAuthToken$params$scope %>% stringr::str_split(' '))[[1]]) | subject != GoogleAuthToken$params$sub){
       
       GoogleAuthToken <<- gargle::credentials_service_account(scopes = unique(union(scopes, GoogleAuthToken$params$scope)), sub = subject, path = serviceJsonPath)
       
-      readr::write_rds('GoogleAuthToken', '~/rCredentials/GoogleAuthToken.rds')
+      readr::write_rds(GoogleAuthToken, '~/rCredentials/GoogleAuthToken.rds')
     }
   }else{
   
