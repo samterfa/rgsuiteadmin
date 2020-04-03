@@ -39,7 +39,7 @@ listGoogleCourses <- function(studentId = NULL, teacherId = NULL, courseStates =
     
     nextPageToken <- responseContent$nextPageToken
     
-    results <- dplyr::bind_rows(results, responseContent$courses %>% jsonlite::toJSON() %>% jsonlite::fromJSON(flatten = T))
+    results <- dplyr::bind_rows(results, responseContent$courses %>% jsonlite::toJSON(auto_unbox = T) %>% jsonlite::fromJSON(flatten = T, simplifyVector = T))
   }
   
   return(results)
@@ -54,6 +54,23 @@ getGoogleCourse <- function(courseId){
   checkGoogleAuthentication(scopes = scopes)
   
   request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  
+  response <- gargle::request_make(request)
+  
+  responseContent <- gargle::response_process(response)
+  
+  return(responseContent)
+}
+
+deleteGoogleCourse <- function(courseId){
+  
+  endpoint <- glue::glue('/v1/courses/{courseId}')
+  
+  scopes <- 'https://www.googleapis.com/auth/classroom.courses'
+  
+  checkGoogleAuthentication(scopes = scopes)
+  
+  request <- gargle::request_build(method = 'DELETE', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
   
   response <- gargle::request_make(request)
   
@@ -106,7 +123,7 @@ listStudentsInGoogleCourse <- function(courseId, pageSize = NULL){
     
     nextPageToken <- responseContent$nextPageToken
     
-    results <- dplyr::bind_rows(results, responseContent$student %>% jsonlite::toJSON() %>% jsonlite::fromJSON(flatten = T))
+    results <- dplyr::bind_rows(results, responseContent$student %>% jsonlite::toJSON(auto_unbox = T) %>% jsonlite::fromJSON(flatten = T, simplifyVector = T))
   }
   
   return(results)
@@ -191,7 +208,7 @@ listTeachersInGoogleCourse <- function(courseId, pageSize = NULL){
     
     nextPageToken <- responseContent$nextPageToken
     
-    results <- dplyr::bind_rows(results, responseContent$teacher %>% jsonlite::toJSON() %>% jsonlite::fromJSON(flatten = T))
+    results <- dplyr::bind_rows(results, responseContent$teacher %>% jsonlite::toJSON(auto_unbox = T) %>% jsonlite::fromJSON(flatten = T, simplifyVector = T))
   }
   
   return(results)

@@ -53,7 +53,7 @@ listGoogleUsersInDomain <- function(domain){
     
     nextPageToken <- responseContent$nextPageToken
     
-    results <- dplyr::bind_rows(results, responseContent$users %>% jsonlite::toJSON() %>% jsonlite::fromJSON(flatten = T))
+    results <- dplyr::bind_rows(results, responseContent$users %>% jsonlite::toJSON(auto_unbox = T) %>% jsonlite::fromJSON(flatten = T, simplifyVector = T))
   }
   
   return(results)

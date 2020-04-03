@@ -26,6 +26,8 @@ checkGoogleAuthentication <- function(scopes, subject = 'adminscripts@minnehahaa
   
   require(tidyverse)
   
+  Sys.sleep(.1)
+  
   if(exists('GoogleAuthToken', inherits = T)){
     
     suppressWarnings(
