@@ -1,0 +1,13 @@
+url: https://samterfa.github.io/SkywardSDK/
+
+author: Sam Terfa
+
+reference:
+ - title: Users
+   desc:  Functions for administering users.
+   contents:
+   - has_concept("Users")
+ - title: Groups
+   desc:  Functions for administering Google Groups.
+   contents:
+   - has_concept("Groups")

@@ -1,0 +1,15 @@
+Package: rgsuiteadmin
+Type: Package
+Title: R Functions for GSuite Administration
+Version: 0.1.0
+Author: Sam Terfa
+Maintainer: Sam Terfa <samterfa@gmail.com>
+Description: This package creates an R SDK for several Google APIs related to GSuite administration.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+URL: http://github.com/samterfa/rgsuiteadmin
+BugReports: http://github.com/samterfa/rgsuiteadmin/issues
+Imports:
+  dplyr,stringr,magrittr,gargle,jsonlite,httr,glue
+RoxygenNote: 7.0.2

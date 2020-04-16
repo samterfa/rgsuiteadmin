@@ -1,4 +1,5 @@
 my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL, ...) {
+ 
   gargle:::cat_line("trying my_credentials_service_account()")
   info <- jsonlite::fromJSON(path, simplifyVector = FALSE)
   if (!identical(info[["type"]], "service_account")) {
@@ -8,10 +9,11 @@ my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL
     return()
   }
   scopes <- httr:::normalize_scopes(gargle:::add_email_scope(scopes))
+ 
+  token <- httr::oauth_service_token(endpoint = gargle:::gargle_outh_endpoint(), secrets = info, scope = scopes , sub = sub)
   
-  token <- httr::oauth_service_token(endpoint = gargle:::gargle_outh_endpoint(), 
-                                     secrets = info, scope = scopes, sub = sub)
   if (is.null(token$credentials$access_token) || !nzchar(token$credentials$access_token)) {
+    return(token)
     NULL
   }
   else {
@@ -20,11 +22,9 @@ my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL
   }
 }
 
-checkGoogleAuthentication <- function(scopes, subject = Sys.getenv('ADMIN_DIR_USER_EMAIL'), serviceJsonPath = Sys.getenv('GOOGLE_SERVICE_JSON_PATH')){
+checkGoogleAuthentication <- function(scopes, sub = Sys.getenv('ADMIN_DIR_USER_EMAIL'), serviceJsonPath = Sys.getenv('GOOGLE_SERVICE_JSON_PATH')){
   
   require(tidyverse)
-  
-  assignInNamespace('credentials_service_account', my_credentials_service_account, ns = 'gargle')
   
   if(Sys.getenv('ADMIN_DIR_USER_EMAIL') == '') stop('Missing Environment Variable! Run Sys.setenv(ADMIN_DIR_USER_EMAIL = {YourGoogleAdminUserEmail})')
   if(Sys.getenv('GOOGLE_SERVICE_JSON_PATH') == '') stop('Missing Environment Variable! Run Sys.setenv(GOOGLE_SERVICE_JSON_PATH = {YourGoogleServiceJsonPath})')
@@ -40,15 +40,15 @@ checkGoogleAuthentication <- function(scopes, subject = Sys.getenv('ADMIN_DIR_US
         checkGoogleAuthentication(scopes = scopes)
       }
     )
-
-    if(!all(scopes %in% (GoogleAuthToken$params$scope %>% stringr::str_split(' '))[[1]]) | is.null(GoogleAuthToken$params$sub)){
-
-      GoogleAuthToken <<- gargle::credentials_service_account(scopes = unique(union(scopes, GoogleAuthToken$params$scope)), sub = subject, path = serviceJsonPath)
+ 
+    if(!all(scopes %in% (GoogleAuthToken$params$scope %>% stringr::str_split(' '))%>% purrr::pluck(1)) | is.null(GoogleAuthToken$params$sub)){
+      
+      GoogleAuthToken <<- my_credentials_service_account(scopes = unique(union(scopes, GoogleAuthToken$params$scope %>% stringr::str_split(' ') %>% purrr::pluck(1))), sub = sub, path = serviceJsonPath)
 
     }
   }else{
-
-      GoogleAuthToken <<- gargle::credentials_service_account(scopes = scopes, sub = subject, path = serviceJsonPath)
+    
+      GoogleAuthToken <<- my_credentials_service_account(scopes = scopes, path = serviceJsonPath, sub = sub)
       
     }
 }

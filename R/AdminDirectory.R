@@ -6,7 +6,7 @@
 #' @param projection What subset of fields to fetch for this user. Acceptable values are: "basic": Do not include any custom fields for the user (default), "custom": Include custom fields from schemas requested in customFieldMask, and "full": Include all fields associated with this user.
 #' @param customFieldMask A comma-separated list of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.
 #' @param viewType Whether to fetch the administrator-only or domain-wide public view of the user. Acceptable values are "admin_view": Results include both administrator-only and domain-public fields for the user. (default), and "domain_public": Results only include fields for the user that are publicly visible to other users in the domain.
-#' @concept Admin Directory
+#' @concept Users
 #' @return Information on the Google user.
 #' @section References:
 #' \href{https://developers.google.com/admin-sdk/directory/v1/reference/users/get}{Google API Documentation}
@@ -35,7 +35,7 @@ getGoogleUser <- function(userKey, projection = NULL, customFieldMask = NULL, vi
 #' This function returns the customer key for a Google user.
 #'
 #' @param customerKey Id of the customer to be retrieved
-#' @concept Admin Directory
+#' @concept Users
 #' @return The customer key of the Google user
 #' @section References:
 #' \href{https://developers.google.com/admin-sdk/directory/v1/reference/customers/get}{Google API Documentation}
@@ -71,7 +71,7 @@ getGoogleCustomerID <- function(customerKey){
 #' @param customFieldMask A comma-separated list of schema names. All fields from these schemas are fetched. This should only be set when projection=custom.
 #' @param viewType Whether to fetch the administrator-only or domain-wide public view of the user. Acceptable values are "admin_view": Results include both administrator-only and domain-public fields for the user. (default), and "domain_public": Results only include fields for the user that are publicly visible to other users in the domain.
 #' @param customer The unique ID for the customer's G Suite account. In case of a multi-domain account, to fetch all groups for a customer, fill this field instead of domain. You can also use the my_customer alias to represent your account's customerId. The customerId is also returned as part of the Users resource. Either the customer or the domain parameter must be provided.
-#' @concept Admin Directory
+#' @concept Users
 #' @return A paginated list of either deleted users or all users in a domain.
 #' @section References:
 #' \href{https://developers.google.com/admin-sdk/directory/v1/reference/users/list}{Google API Documentation}
@@ -105,9 +105,19 @@ listGoogleUsersInDomain <- function(domain, orderBy = NULL, sortOrder = NULL, sh
   return(results)
 }
 
-getGoogleGroupSettings <- function(googleGroupEmail){
+#' Get a Google group's settings
+#'
+#' This function retrieves a group's settings identified by the group email address.
+#'
+#' @param groupUniqueId The group's email address.
+#' @concept Groups
+#' @return The Google group's settings
+#' @section References:
+#' \href{https://developers.google.com/admin-sdk/groups-settings/v1/reference/groups/get}{Google API Documentation}
+#' @export
+getGoogleGroupSettings <- function(groupUniqueId){
   
-  endpoint <- paste0("/groups/v1/groups/", googleGroupEmail)
+  endpoint <- glue::glue('/groups/v1/groups/{groupUniqueId}')
   
   scopes <- "https://www.googleapis.com/auth/apps.groups.settings"
   
@@ -116,7 +126,7 @@ getGoogleGroupSettings <- function(googleGroupEmail){
   request <- gargle::request_build(method = 'GET', path = endpoint, params = list(alt = 'json'), token = GoogleAuthToken)
   
   response <- gargle::request_make(request)
-  return(response)
+ 
   responseContent <- gargle::response_process(response)
   
   return(responseContent)
