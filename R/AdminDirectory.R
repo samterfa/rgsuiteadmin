@@ -57,7 +57,7 @@ getGoogleCustomerID <- function(customerKey){
   return(responseContent)
 }
 
-#' Get a Google User's Customer ID.
+#' List Google Users in a Domain
 #'
 #' Retrieves a paginated list of either deleted users or all users in a domain.
 #'

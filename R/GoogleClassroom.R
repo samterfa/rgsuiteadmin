@@ -1,5 +1,17 @@
-baseUrl <- 'https://classroom.googleapis.com'
+googleClassroomBaseUrl <- 'https://classroom.googleapis.com'
 
+#' Create a Course Section
+#'
+#' This function creates a Google Classroom Course
+#'
+#' @param name The name of the course
+#' @param section The name of the course section
+#' @param ownerId The owner of the created course who is added as a teacher
+#' @concept Classroom
+#' @return Information on the newly created course.
+#' @section References:
+#' \href{https://developers.google.com/classroom/reference/rest/v1/courses/create}{Google API Documentation}
+#' @export
 createGoogleCourse <- function(name, section, ownerId){
   
   endpoint <- '/v1/courses/'
@@ -53,7 +65,7 @@ getGoogleCourse <- function(courseId){
   
   checkGoogleAuthentication(scopes = scopes)
   
-  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   
@@ -70,7 +82,7 @@ deleteGoogleCourse <- function(courseId){
   
   checkGoogleAuthentication(scopes = scopes)
   
-  request <- gargle::request_build(method = 'DELETE', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  request <- gargle::request_build(method = 'DELETE', path = endpoint, token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   
@@ -137,7 +149,7 @@ getStudentInGoogleCourse <- function(courseId, userId){
   
   checkGoogleAuthentication(scopes = scopes)
   
-  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   
@@ -155,7 +167,7 @@ deleteStudentInGoogleCourse <- function(courseId, userId){
   
   checkGoogleAuthentication(scopes = scopes)
   
-  request <- gargle::request_build(method = 'DELETE', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  request <- gargle::request_build(method = 'DELETE', path = endpoint, token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   
@@ -248,7 +260,7 @@ getTeacherInGoogleCourse <- function(courseId, userId){
   
   checkGoogleAuthentication(scopes = scopes)
   
-  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = baseUrl)
+  request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   

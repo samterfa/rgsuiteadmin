@@ -2,7 +2,7 @@
 % Please edit documentation in R/AdminDirectory.R
 \name{listGoogleUsersInDomain}
 \alias{listGoogleUsersInDomain}
-\title{Get a Google User's Customer ID.}
+\title{List Google Users in a Domain}
 \usage{
 listGoogleUsersInDomain(
   domain,
