@@ -20,44 +20,35 @@ my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL
   }
 }
 
-assignInNamespace('credentials_service_account', my_credentials_service_account, ns = 'gargle')
-
-checkGoogleAuthentication <- function(scopes, subject = 'adminscripts@minnehahaacademy.net', serviceJsonPath = '~/rCredentials/GoogleServiceCredentials.json'){
+checkGoogleAuthentication <- function(scopes, subject = Sys.getenv('ADMIN_DIR_USER_EMAIL'), serviceJsonPath = Sys.getenv('GOOGLE_SERVICE_JSON_PATH')){
   
   require(tidyverse)
+  
+  assignInNamespace('credentials_service_account', my_credentials_service_account, ns = 'gargle')
+  
+  if(Sys.getenv('ADMIN_DIR_USER_EMAIL') == '') stop('Missing Environment Variable! Run Sys.setenv(ADMIN_DIR_USER_EMAIL = {YourGoogleAdminUserEmail})')
+  if(Sys.getenv('GOOGLE_SERVICE_JSON_PATH') == '') stop('Missing Environment Variable! Run Sys.setenv(GOOGLE_SERVICE_JSON_PATH = {YourGoogleServiceJsonPath})')
   
   Sys.sleep(.1)
   
   if(exists('GoogleAuthToken', inherits = T)){
-    
+
     suppressWarnings(
       if(class(GoogleAuthToken) == 'character' | length(GoogleAuthToken$params$scope) == 0){
-        
-        file.remove('~/rCredentials/GoogleAuthToken.rds')
+
         rm(GoogleAuthToken, inherits = T)
-        checkGoogleAuthentication(scopes = scopes) 
+        checkGoogleAuthentication(scopes = scopes)
       }
     )
-    
+
     if(!all(scopes %in% (GoogleAuthToken$params$scope %>% stringr::str_split(' '))[[1]]) | is.null(GoogleAuthToken$params$sub)){
-      
+
       GoogleAuthToken <<- gargle::credentials_service_account(scopes = unique(union(scopes, GoogleAuthToken$params$scope)), sub = subject, path = serviceJsonPath)
-      
-      readr::write_rds(GoogleAuthToken, '~/rCredentials/GoogleAuthToken.rds')
+
     }
   }else{
-  
-    if(file.exists('~/rCredentials/GoogleAuthToken.rds')){
-      
-      GoogleAuthToken <<- readr::read_rds('~/rCredentials/GoogleAuthToken.rds')
-      
-      checkGoogleAuthentication(scopes, subject, serviceJsonPath)
-      
-    }else{
-    
+
       GoogleAuthToken <<- gargle::credentials_service_account(scopes = scopes, sub = subject, path = serviceJsonPath)
       
-      readr::write_rds(GoogleAuthToken, '~/rCredentials/GoogleAuthToken.rds')
     }
-  }
 }
