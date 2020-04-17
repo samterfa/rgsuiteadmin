@@ -13,7 +13,7 @@
 #' @export
 getGoogleUser <- function(userKey, projection = NULL, customFieldMask = NULL, viewType = NULL){
   
-  params <- as.list(environment()) %>% purrr::discard(str_detect(names(.), 'userKey'))
+  params <- as.list(environment()) %>% purrr::discard(stringr::str_detect(names(.), 'userKey'))
   
   endpoint <- paste0("/admin/directory/v1/users/", userKey)
   
