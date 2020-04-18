@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • rgsuiteadmin</title>
+<title>List Google Courses — listGoogleCourses • rgsuiteadmin</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="List Google Courses — listGoogleCourses" />
+<meta property="og:description" content="This function lists all Google Classroom Courses by student, teacher or domain" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -101,90 +103,54 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>List Google Courses</h1>
+    <small class="dont-index">Source: <a href='https://github.com/samterfa/rgsuiteadmin/blob/master/R/GoogleClassroom.R'><code>R/GoogleClassroom.R</code></a></small>
+    <div class="hidden name"><code>listGoogleCourses.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This function lists all Google Classroom Courses by student, teacher or domain</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>listGoogleCourses</span>(<span class='kw'>studentId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>teacherId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>courseStates</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-users" class="hasAnchor"><a href="#section-users" class="anchor"></a>Users</h2>
-          <p class="section-desc"><p>Functions for administering Google users.</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="getGoogleCustomerID.html">getGoogleCustomerID()</a></code> </p>
-        </td>
-        <td><p>Get a Google User's Customer ID.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getGoogleUser.html">getGoogleUser()</a></code> </p>
-        </td>
-        <td><p>Get a Google User.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="listGoogleUsersInDomain.html">listGoogleUsersInDomain()</a></code> </p>
-        </td>
-        <td><p>List Google Users in a Domain</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-groups" class="hasAnchor"><a href="#section-groups" class="anchor"></a>Groups</h2>
-          <p class="section-desc"><p>Functions for administering Google groups.</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="getGoogleGroupSettings.html">getGoogleGroupSettings()</a></code> </p>
-        </td>
-        <td><p>Get a Google group's settings</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-classroom" class="hasAnchor"><a href="#section-classroom" class="anchor"></a>Classroom</h2>
-          <p class="section-desc"><p>Functions for administering Google Classroom classes.</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="createGoogleCourse.html">createGoogleCourse()</a></code> </p>
-        </td>
-        <td><p>Create a Course Section</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="listGoogleCourses.html">listGoogleCourses()</a></code> </p>
-        </td>
-        <td><p>List Google Courses</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>studentId</th>
+      <td><p>Restricts returned courses to those having a student with the specified identifier. The identifier can be one of the following: the numeric identifier for the user, the email address of the user, the string literal "me", or indicating the requesting user</p></td>
+    </tr>
+    <tr>
+      <th>teacherId</th>
+      <td><p>Restricts returned courses to those having a teacher with the specified identifier. The identifier can be one of the following: the numeric identifier for the user, the email address of the user, the string literal "me", or the indicating the requesting user</p></td>
+    </tr>
+    <tr>
+      <th>courseStates</th>
+      <td><p>Restricts returned courses to those in one of the specified states The default value is ACTIVE, ARCHIVED, PROVISIONED, DECLINED.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list of Google Classroom courses.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    
+
+<p><a href='https://developers.google.com/classroom/reference/rest/v1/courses/list'>Google API Documentation</a></p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-users">Users</a></li>
-      <li><a href="#section-groups">Groups</a></li>
-      <li><a href="#section-classroom">Classroom</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
     </ul>
+
   </div>
 </div>
 

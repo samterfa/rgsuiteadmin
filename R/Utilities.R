@@ -52,3 +52,16 @@ checkGoogleAuthentication <- function(scopes, sub = Sys.getenv('ADMIN_DIR_USER_E
       
     }
 }
+
+.onLoad <- function(libname, pkgname){
+  suppressPackageStartupMessages(
+    
+    {
+      pkgs <- c('dplyr')#,'stringr','magrittr','gargle','jsonlite','httr','glue', 'purrr');
+      
+      for(pkg in pkgs) {
+        eval(parse(text = paste0('library(', pkg, ')')))
+      }
+    }
+  )
+}

@@ -16,6 +16,9 @@
     <loc>https://samterfa.github.io/SkywardSDK//reference/getGoogleUser.html</loc>
   </url>
   <url>
+    <loc>https://samterfa.github.io/SkywardSDK//reference/listGoogleCourses.html</loc>
+  </url>
+  <url>
     <loc>https://samterfa.github.io/SkywardSDK//reference/listGoogleUsersInDomain.html</loc>
   </url>
 </urlset>

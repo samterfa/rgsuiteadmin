@@ -1,4 +1,4 @@
-googleClassroomBaseUrl <- 'https://classroom.googleapis.com'
+googleClassroomBaseUrl <- googleClassroomBaseUrl
 
 #' Create a Course Section
 #'
@@ -22,7 +22,7 @@ createGoogleCourse <- function(name, section, ownerId){
   
   payload <- list(name = name, section = section, ownerId = ownerId) %>% jsonlite::toJSON(auto_unbox = T)
   
-  request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+  request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
   
   response <- gargle::request_make(request)
   
@@ -31,7 +31,23 @@ createGoogleCourse <- function(name, section, ownerId){
   return(responseContent)
 }
 
-listGoogleCourses <- function(studentId = NULL, teacherId = NULL, courseStates = NULL, pageSize = NULL){
+#' List Google Courses
+#'
+#' This function lists all Google Classroom Courses by student, teacher or domain
+#'
+#' @param studentId Restricts returned courses to those having a student with the specified identifier. The identifier can be one of the following: the numeric identifier for the user, the email address of the user, the string literal "me", or indicating the requesting user
+#' @param teacherId Restricts returned courses to those having a teacher with the specified identifier. The identifier can be one of the following: the numeric identifier for the user, the email address of the user, the string literal "me", or the indicating the requesting user
+#' @param courseStates Restricts returned courses to those in one of the specified states The default value is ACTIVE, ARCHIVED, PROVISIONED, DECLINED.
+#' @concept Classroom
+#' @return A list of Google Classroom courses.
+#' @section References:
+#' \href{https://developers.google.com/classroom/reference/rest/v1/courses/list}{Google API Documentation}
+#' @export
+listGoogleCourses <- function(studentId = NULL, teacherId = NULL, courseStates = NULL){
+  
+  pageSize <- 500
+  
+  params <- as.list(environment())
   
   endpoint <- '/v1/courses/'
   
@@ -39,17 +55,16 @@ listGoogleCourses <- function(studentId = NULL, teacherId = NULL, courseStates =
   
   checkGoogleAuthentication(scopes = scopes)
   
-  nextPageToken <- NULL
   results <- NULL
-  while(is.null(results) | !is.null(nextPageToken)){
+  while(is.null(results) | !is.null(params$pageToken)){
     
-    request <- gargle::request_build(method = 'GET', path = endpoint, params = list(studentId = studentId, teacherId = teacherId, courseStates = courseStates, pageSize = pageSize, pageToken = nextPageToken), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'GET', path = endpoint, token = GoogleAuthToken, params = params, base_url = googleClassroomBaseUrl)
     
     response <- gargle::request_make(request)
-    
+  
     responseContent <- gargle::response_process(response)
     
-    nextPageToken <- responseContent$nextPageToken
+    params$pageToken <- responseContent$nextPageToken
     
     results <- dplyr::bind_rows(results, responseContent$courses %>% jsonlite::toJSON(auto_unbox = T) %>% jsonlite::fromJSON(flatten = T, simplifyVector = T))
   }
@@ -104,7 +119,7 @@ addStudentsToGoogleCourse <- function(courseId, userIds){
     
     payload <- list(courseId = courseId, userId = userId) %>% jsonlite::toJSON(auto_unbox = T)
     
-    request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
     
     response <- gargle::request_make(request)
     
@@ -127,7 +142,7 @@ listStudentsInGoogleCourse <- function(courseId, pageSize = NULL){
   results <- NULL
   while(is.null(results) | !is.null(nextPageToken)){
     
-    request <- gargle::request_build(method = 'GET', path = endpoint, params = list(pageSize = pageSize, pageToken = nextPageToken), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'GET', path = endpoint, params = list(pageSize = pageSize, pageToken = nextPageToken), token = GoogleAuthToken, base_url = )
     
     response <- gargle::request_make(request)
     
@@ -189,7 +204,7 @@ addTeachersToGoogleCourse <- function(courseId, userIds){
     
     payload <- list(courseId = courseId, userId = userId) %>% jsonlite::toJSON(auto_unbox = T)
     
-    request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'POST', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
     
     response <- gargle::request_make(request)
     
@@ -215,7 +230,7 @@ removeTeachersFromGoogleCourse <- function(courseId, userIds){
     
     endpoint <- baseEndpoint %>% glue::glue('/{userId}')
     
-    request <- gargle::request_build(method = 'DELETE', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'DELETE', path = endpoint, params = list(alt = 'json'), body = payload, content_type('text/html'), token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
     
     response <- gargle::request_make(request)
     
@@ -238,7 +253,7 @@ listTeachersInGoogleCourse <- function(courseId, pageSize = NULL){
   results <- NULL
   while(is.null(results) | !is.null(nextPageToken)){
     
-    request <- gargle::request_build(method = 'GET', path = endpoint, params = list(pageSize = pageSize, pageToken = nextPageToken), token = GoogleAuthToken, base_url = 'https://classroom.googleapis.com')
+    request <- gargle::request_build(method = 'GET', path = endpoint, params = list(pageSize = pageSize, pageToken = nextPageToken), token = GoogleAuthToken, base_url = googleClassroomBaseUrl)
     
     response <- gargle::request_make(request)
     

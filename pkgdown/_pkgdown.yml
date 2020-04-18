@@ -4,10 +4,14 @@ author: Sam Terfa
 
 reference:
  - title: Users
-   desc:  Functions for administering users.
+   desc:  Functions for administering Google users.
    contents:
    - has_concept("Users")
  - title: Groups
-   desc:  Functions for administering Google Groups.
+   desc:  Functions for administering Google groups.
    contents:
    - has_concept("Groups")
+ - title: Classroom
+   desc:  Functions for administering Google Classroom classes.
+   contents:
+   - has_concept("Classroom")
