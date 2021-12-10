@@ -1,9 +1,9 @@
 my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL, ...) {
  
-  gargle:::cat_line("trying my_credentials_service_account()")
+  cat("trying my_credentials_service_account()")
   info <- jsonlite::fromJSON(path, simplifyVector = FALSE)
   if (!identical(info[["type"]], "service_account")) {
-    gargle:::cat_line("JSON does not appear to represent a service account\n", 
+    cat("JSON does not appear to represent a service account\n", 
                       "did you provide the JSON for an OAuth client instead of for a ", 
                       "service account?")
     return()
@@ -17,7 +17,7 @@ my_credentials_service_account <- function (scopes = NULL, path = "", sub = NULL
     NULL
   }
   else {
-    gargle:::cat_line("service account email: ", gargle:::token_email(token))
+    cat("service account email: ", gargle:::token_email(token))
     token
   }
 }
